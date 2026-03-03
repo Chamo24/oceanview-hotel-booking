@@ -10,8 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * RegisterServlet - Handles new user registration
+ * RegisterServlet - Handles new staff registration by Admin
  * URL: /register
+ * Admin only - AuthenticationFilter restricts access
  * MVC Pattern: Controller component
  */
 @WebServlet("/register")
@@ -25,20 +26,17 @@ public class RegisterServlet extends HttpServlet {
         userService = new UserService();
     }
 
-    /**
-     * GET - Display registration page
-     */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest request,
+                         HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("/register.jsp").forward(request, response);
+        request.getRequestDispatcher("/register.jsp")
+               .forward(request, response);
     }
 
-    /**
-     * POST - Process registration form
-     */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest request,
+                          HttpServletResponse response)
             throws ServletException, IOException {
 
         String username = request.getParameter("username");
@@ -46,26 +44,36 @@ public class RegisterServlet extends HttpServlet {
         String confirmPassword = request.getParameter("confirmPassword");
         String fullName = request.getParameter("fullName");
 
-        // Check passwords match
+        String role = request.getParameter("role");
+        if (role == null ||
+            (!role.equals("receptionist") && !role.equals("admin"))) {
+            role = "receptionist";
+        }
+
         if (!password.equals(confirmPassword)) {
             request.setAttribute("error", "Passwords do not match.");
             request.setAttribute("username", username);
             request.setAttribute("fullName", fullName);
-            request.getRequestDispatcher("/register.jsp").forward(request, response);
+            request.getRequestDispatcher("/register.jsp")
+                   .forward(request, response);
             return;
         }
 
-        // Register through Service layer
-        String error = userService.register(username, password, fullName);
+        String error = userService.register(username, password,
+                                            fullName, role);
 
         if (error != null) {
             request.setAttribute("error", error);
             request.setAttribute("username", username);
             request.setAttribute("fullName", fullName);
-            request.getRequestDispatcher("/register.jsp").forward(request, response);
+            request.getRequestDispatcher("/register.jsp")
+                   .forward(request, response);
         } else {
-            request.setAttribute("success", "Registration successful! Please login.");
-            request.getRequestDispatcher("/login.jsp").forward(request, response);
+            request.setAttribute("success",
+                "Staff account created! Username: " + username +
+                " | Share credentials with the staff member.");
+            request.getRequestDispatcher("/register.jsp")
+                   .forward(request, response);
         }
     }
 }

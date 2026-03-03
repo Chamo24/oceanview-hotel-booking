@@ -14,6 +14,7 @@ public class User {
     private String fullName;
     private String role;
     private Timestamp createdAt;
+    private boolean firstLogin;
 
     // Default Constructor
     public User() {
@@ -74,6 +75,14 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+    
+    public boolean isFirstLogin() {
+        return firstLogin;
+    }
+
+    public void setFirstLogin(boolean firstLogin) {
+        this.firstLogin = firstLogin;
     }
 
     public Timestamp getCreatedAt() {

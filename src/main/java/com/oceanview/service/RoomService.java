@@ -1,5 +1,6 @@
 package com.oceanview.service;
 
+import com.oceanview.dao.DAOFactory;
 import com.oceanview.dao.RoomDAO;
 import com.oceanview.model.Room;
 import java.util.List;
@@ -10,11 +11,11 @@ import java.util.List;
  */
 public class RoomService {
 
-    private RoomDAO roomDAO;
-    private ValidationService validationService;
+	protected RoomDAO roomDAO;
+	protected ValidationService validationService;
 
     public RoomService() {
-        this.roomDAO = new RoomDAO();
+        this.roomDAO = DAOFactory.createRoomDAO();
         this.validationService = new ValidationService();
     }
 

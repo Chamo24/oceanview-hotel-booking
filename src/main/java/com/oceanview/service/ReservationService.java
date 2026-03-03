@@ -1,6 +1,7 @@
 package com.oceanview.service;
 
 import com.oceanview.dao.BillDAO;
+import com.oceanview.dao.DAOFactory;
 import com.oceanview.dao.ReservationDAO;
 import com.oceanview.dao.RoomDAO;
 import com.oceanview.model.Bill;
@@ -15,15 +16,15 @@ import java.util.List;
  */
 public class ReservationService {
 
-    private ReservationDAO reservationDAO;
-    private RoomDAO roomDAO;
-    private BillDAO billDAO;
-    private ValidationService validationService;
+	protected ReservationDAO reservationDAO;
+	protected RoomDAO roomDAO;
+	protected BillDAO billDAO;
+	protected ValidationService validationService;
 
     public ReservationService() {
-        this.reservationDAO = new ReservationDAO();
-        this.roomDAO = new RoomDAO();
-        this.billDAO = new BillDAO();
+    	this.reservationDAO = DAOFactory.createReservationDAO();
+        this.roomDAO = DAOFactory.createRoomDAO();
+        this.billDAO = DAOFactory.createBillDAO();
         this.validationService = new ValidationService();
     }
 
@@ -32,9 +33,8 @@ public class ReservationService {
      * Returns error message if validation fails, null if successful
      */
     public String createReservation(String guestName, String address, String contactNumber,
-                                     String roomType, int roomId, String checkInDate,
-                                     String checkOutDate, int createdBy) {
-
+                                 String guestEmail, String roomType, int roomId, String checkInDate,
+                                 String checkOutDate, int createdBy) {
         // Validate guest name
         if (!validationService.isValidGuestName(guestName)) {
             return "Invalid guest name. Only letters and spaces allowed (2-100 characters).";
@@ -84,6 +84,7 @@ public class ReservationService {
         Reservation reservation = new Reservation(guestName, address, contactNumber,
                 roomId, roomType, checkInDate, checkOutDate, createdBy);
         reservation.setReservationNumber(reservationNumber);
+        reservation.setGuestEmail(guestEmail);
 
         // Save to database (Trigger will auto-calculate nights and cost)
         boolean success = reservationDAO.addReservation(reservation);
@@ -179,5 +180,28 @@ public class ReservationService {
             return false;
         }
         return reservationDAO.updateReservationStatus(reservationId, status);
+    }
+    public List<Reservation> getReservationsByDateRange(
+            String startDate, String endDate) {
+        if (startDate == null || startDate.trim().isEmpty()) {
+            return new java.util.ArrayList<>();
+        }
+        if (endDate == null || endDate.trim().isEmpty()) {
+            return new java.util.ArrayList<>();
+        }
+        if (endDate.compareTo(startDate) < 0) {
+            return new java.util.ArrayList<>();
+        }
+        return reservationDAO.getReservationsByDateRange(startDate, endDate);
+    }
+
+    public double getRevenueByDateRange(String startDate, String endDate) {
+        if (startDate == null || startDate.trim().isEmpty()) {
+            return 0;
+        }
+        if (endDate == null || endDate.trim().isEmpty()) {
+            return 0;
+        }
+        return reservationDAO.getRevenueByDateRange(startDate, endDate);
     }
 }

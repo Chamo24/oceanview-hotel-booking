@@ -41,6 +41,7 @@ public class UserDAO {
                     user.setFullName(rs.getString("full_name"));
                     user.setRole(rs.getString("role"));
                     user.setCreatedAt(rs.getTimestamp("created_at"));
+                    user.setFirstLogin(rs.getInt("is_first_login") == 1);
                 }
             }
         } catch (SQLException e) {

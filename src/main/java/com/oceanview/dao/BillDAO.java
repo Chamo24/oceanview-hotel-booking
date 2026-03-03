@@ -173,7 +173,7 @@ public class BillDAO {
             while (rs.next()) {
                 Bill bill = new Bill();
                 bill.setRoomType(rs.getString("room_type"));
-                bill.setBillId(rs.getInt("bill_count"));
+                bill.setGeneratedBy(rs.getInt("bill_count"));
                 bill.setNumberOfNights(rs.getInt("total_nights"));
                 bill.setTotalAmount(rs.getDouble("total_revenue"));
                 report.add(bill);

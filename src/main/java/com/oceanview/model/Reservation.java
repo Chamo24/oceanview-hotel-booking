@@ -13,7 +13,8 @@ public class Reservation {
     private String guestName;
     private String address;
     private String contactNumber;
-    private int roomId;
+private String guestEmail;
+private int roomId;
     private String roomType;
     private String checkInDate;
     private String checkOutDate;
@@ -84,6 +85,14 @@ public class Reservation {
 
     public void setContactNumber(String contactNumber) {
         this.contactNumber = contactNumber;
+    }
+
+    public String getGuestEmail() {
+        return guestEmail;
+    }
+
+    public void setGuestEmail(String guestEmail) {
+        this.guestEmail = guestEmail;
     }
 
     public int getRoomId() {

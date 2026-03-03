@@ -167,7 +167,7 @@ public class RoomDAO {
                 Room room = new Room();
                 room.setRoomType(rs.getString("room_type"));
                 room.setStatus(rs.getString("status"));
-                room.setRoomId(rs.getInt("room_count"));
+                room.setDescription(String.valueOf(rs.getInt("room_count")));
                 room.setRatePerNight(rs.getDouble("total_rate"));
                 report.add(room);
             }

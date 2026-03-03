@@ -65,7 +65,8 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("username", user.getUsername());
             session.setAttribute("fullName", user.getFullName());
             session.setAttribute("role", user.getRole());
-            session.setMaxInactiveInterval(30 * 60); // 30 minutes timeout
+            session.setAttribute("isFirstLogin", user.isFirstLogin());
+            session.setMaxInactiveInterval(30 * 60);
 
             response.sendRedirect("dashboard");
         } else {
